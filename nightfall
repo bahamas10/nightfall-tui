@@ -78,17 +78,21 @@ Yb, `8dP'     `88                    IP'`Yb      I8   IP'`Yb             IP'`Yb 
                              `Y8P"                     "Y8P'
 EOF
 
-# Global state
-BG_JOB=
+# Requirements
 MIN_COLUMNS=110
 MIN_LINES=49
+
+# Global state
+BG_JOB=
 NOW_PLAYING=
 PIPE=
 SELECTED=0
 
-# just die
+# print and error and die
 fatal() {
+	tput setaf 1
 	echo "[error]" "$@" >&2
+	tput sgr0
 	exit 1
 }
 
@@ -303,7 +307,9 @@ read-keyboard-events-task() {
 
 main() {
 	if ! command -v ffplay &>/dev/null; then
-		fatal 'ffplay (by ffmpeg) required for playback'
+		echo 'ffplay (by ffmpeg) required for playback'
+		echo 'instal "ffmpeg" with your package manager and try again'
+		fatal 'ffplay not found'
 	fi
 
 	# figure out window size
