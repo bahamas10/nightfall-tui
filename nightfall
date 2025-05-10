@@ -112,6 +112,18 @@ cleanup() {
 	echo "download the album for free"
 	echo "=> $ALBUM_URL"
 	echo
+
+	# look for any stray ffplay processes just to be nice
+	local output
+	output=$(pgrep ffplay)
+	if [[ -n $output ]]; then
+		echo '!!! warning: stray ffplay processes possibly found !!!'
+		echo 'IF YOU ARE STILL HEARING MUSIC try running the following'
+		echo 'and killing any pids found'
+		echo
+		echo '$ pgrep ffplay'
+		echo
+	fi
 }
 
 # draw a box around the outside of the terminal
@@ -152,7 +164,7 @@ draw-ui() {
 	local track i
 
 	local x=$((COLUMNS / 2))
-	local y=$((LINES / 2 - 15))
+	local y=$((LINES / 2 - 17))
 
 	tput setaf 197
 

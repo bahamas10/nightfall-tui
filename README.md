@@ -4,6 +4,8 @@ nightfall
 A TUI to play the album [Nightfall by Dave
 Eddy](https://music.daveeddy.com/albums/nightfall/)
 
+https://nightfall.ysap.sh
+
 Usage
 -----
 
