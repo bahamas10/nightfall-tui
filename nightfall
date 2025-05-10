@@ -333,11 +333,12 @@ main() {
 	if [[ -z $cols || -z $lines ]]; then
 		fatal 'cannot determine terminal size'
 	fi
+
+	echo "terminal size: ${cols}x$lines"
 	if ((cols < MIN_COLUMNS || lines < MIN_LINES)); then
 		fatal 'terminal is too small to display player:' \
 		    "must be >= ${MIN_COLUMNS}x${MIN_LINES}"
 	fi
-	echo "terminal size: ${cols}x$lines"
 
 	# ensure these are at least initialized
 	COLUMNS=$cols
