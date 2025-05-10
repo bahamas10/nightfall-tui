@@ -41,7 +41,7 @@
 # License: MIT
 
 TAGLINE='Nightfall (2024) by Dave Eddy'
-ALBUM_URL='https://music.daveeddy.com/albums/nightfall/'
+WEBSITE='https://nightfall.ysap.sh'
 BASE_URL='https://music.daveeddy.com/static/music/Nightfall - 2024/mp3'
 TRACKS=(
 	'01 Before the Night'
@@ -109,11 +109,13 @@ cleanup() {
 
 	# call to action lol
 	echo
-	echo "download the album for free"
-	echo "=> $ALBUM_URL"
+	echo 'View the source code or download the album'
+	tput setaf 207
+	echo "=> $WEBSITE"
 	echo
 
 	# look for any stray ffplay processes just to be nice
+	tput setaf 1
 	local output
 	output=$(pgrep ffplay)
 	if [[ -n $output ]]; then
@@ -124,6 +126,8 @@ cleanup() {
 		echo '$ pgrep ffplay'
 		echo
 	fi
+
+	tput sgr0
 }
 
 # draw a box around the outside of the terminal
