@@ -267,9 +267,9 @@ read-keyboard-events-task() {
 	local escape_char=$'\u1b'
 	while true; do
 		local data=
-                read -rsn1 data 2>/dev/null || return
+		read -rsn1 data 2>/dev/null || return
 		if [[ $data == "$escape_char" ]]; then
-                        read -rsn2 data 2>/dev/null || return
+			read -rsn2 data 2>/dev/null || return
 		fi
 
 		local output=
