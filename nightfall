@@ -308,7 +308,7 @@ read-keyboard-events-task() {
 main() {
 	if ! command -v ffplay &>/dev/null; then
 		echo 'ffplay (by ffmpeg) required for playback'
-		echo 'instal "ffmpeg" with your package manager and try again'
+		echo 'install "ffmpeg" with your package manager and try again'
 		fatal 'ffplay not found'
 	fi
 
