@@ -95,23 +95,25 @@ SELECTED=0
 # without editorializing too much `tput` is not very portable and it can be
 # slow to run. let's just optimize it here for the common-case until I feel
 # like making my own full-feature pure-bash tput implementation lol.
+# shellcheck disable=SC1087
 tput() {
+	local ESC=$'\x1b'
 	case "$1" in
-		sgr0) echo -n $'\x1b[0m';;
-		bold) echo -n $'\x1b[1m';;
-		setaf) echo -n $'\x1b[38;5;'"$2m";;
-		setab) echo -n $'\x1b[48;5;'"$2m";;
-		sc) echo -n $'\x1b[7';;
-		rc) echo -n $'\x1b[8';;
-		cnorm) echo -n $'\x1b[?25h';;
-		civis) echo -n $'\x1b[?25l';;
-		smcup) echo -n $'\x1b[?1049h';;
-		rmcup) echo -n $'\x1b[?1049l';;
-		clear) echo -n $'\x1b[2J';;
+		sgr0) echo -n "$ESC[0m";;
+		bold) echo -n "$ESC[1m";;
+		setaf) echo -n "$ESC[38;5;$2m";;
+		setab) echo -n "$ESC[48;5;$2m";;
+		sc) echo -n "$ESC[7";;
+		rc) echo -n "$ESC[8";;
+		cnorm) echo -n "$ESC[?25h";;
+		civis) echo -n "$ESC[?25l";;
+		smcup) echo -n "$ESC[?1049h";;
+		rmcup) echo -n "$ESC[?1049l";;
+		clear) echo -n "$ESC[2J";;
 		cup)
 			local row=$(($2 + 1))
 			local col=$(($3 + 1))
-			echo -n $'\x1b'"[$row;${col}H";;
+			echo -n "$ESC""[$row;${col}H";;
 		'') return 1;;
 		*)
 			# not implemented - default to external command
