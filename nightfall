@@ -88,6 +88,38 @@ NOW_PLAYING=
 PIPE=
 SELECTED=0
 
+# pure-bash impl of *some* tput subcommands - this cuts down on the number of
+# fork+exec of `tput` commands when doing basic things like setting colors or
+# moving the cursor.
+#
+# without editorializing too much `tput` is not very portable and it can be
+# slow to run. let's just optimize it here for the common-case until I feel
+# like making my own full-feature pure-bash tput implementation lol.
+tput() {
+	case "$1" in
+		sgr0) echo -n $'\x1b[0m';;
+		bold) echo -n $'\x1b[1m';;
+		setaf) echo -n $'\x1b[38;5;'"$2m";;
+		setab) echo -n $'\x1b[48;5;'"$2m";;
+		sc) echo -n $'\x1b[7';;
+		rc) echo -n $'\x1b[8';;
+		cnorm) echo -n $'\x1b[?25h';;
+		civis) echo -n $'\x1b[?25l';;
+		smcup) echo -n $'\x1b[?1049h';;
+		rmcup) echo -n $'\x1b[?1049l';;
+		clear) echo -n $'\x1b[2J';;
+		cup)
+			local row=$(($2 + 1))
+			local col=$(($3 + 1))
+			echo -n $'\x1b'"[$row;${col}H";;
+		'') return 1;;
+		*)
+			# not implemented - default to external command
+			command tput "$@"
+			;;
+	esac
+}
+
 # print and error and die
 fatal() {
 	tput setaf 1
