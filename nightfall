@@ -113,7 +113,7 @@ tput() {
 		cup)
 			local row=$(($2 + 1))
 			local col=$(($3 + 1))
-			echo -n "$ESC""[$row;${col}H";;
+			echo -n "$ESC[$row;${col}H";;
 		'') return 1;;
 		*)
 			# not implemented - default to external command
