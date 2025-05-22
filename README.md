@@ -8,6 +8,8 @@ Eddy](https://music.daveeddy.com/albums/nightfall/)
 
 View the website: https://nightfall.ysap.sh
 
+See how it was made: https://www.youtube.com/watch?v=J4iUQiZrj98
+
 Usage
 -----
 
