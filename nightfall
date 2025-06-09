@@ -40,6 +40,14 @@
 #   3. read/write - the named pipe for task communication
 #   4. read - /dev/tty for reading keyboard input
 #
+# Animation Story Time: When I added the custom `tput` function below it sped things up
+# *so much* that it stopped looking like there were animations.  To re-add
+# them, we need to be able to sleep with millisecond resolution - however that
+# is not POSIX.  We will do our best to support this by 1. attempting to load
+# the bash sleep bultin (failing silently) and then just attempting to run sleep
+# with millisecond times (also failing silently).  Either it'll work, or we'll
+# just fail - so worst case the user gets no animations.
+#
 # Author: Dave Eddy <dave@daveeddy.com>
 # Date: May 13, 2024
 # License: MIT
@@ -91,6 +99,11 @@ BG_JOB=
 NOW_PLAYING=
 PIPE=
 SELECTED=0
+
+# sleep wrapper that silently fails
+_sleep() {
+	sleep "$1" &>/dev/null
+}
 
 # pure-bash impl of *some* tput subcommands - this cuts down on the number of
 # fork+exec of `tput` commands when doing basic things like setting colors or
@@ -190,6 +203,8 @@ draw-box() {
 	tput cup "$((LINES - offset - 1))" "$((offset * 2))"
 	echo -n "$line"
 
+	_sleep .05
+
 	# draw left side line
 	local x=$((offset * 2))
 	for ((i = offset; i < LINES - offset - 1; i++)); do
@@ -203,6 +218,8 @@ draw-box() {
 		tput cup "$i" "$x"
 		echo -n '  '
 	done
+
+	_sleep .05
 }
 
 # draw the UI (album art, track list, now playing, etc.)
@@ -359,6 +376,9 @@ main() {
 	# open the terminal for keyboard input
 	exec 4</dev/tty || fatal 'no terminal detected'
 
+	# try to load the sleep builtin - we don't care if this fails
+	enable sleep 2>/dev/null
+
 	# figure out window size
 	shopt -s checkwinsize
 
@@ -396,7 +416,6 @@ main() {
 	mkfifo "$PIPE" || fatal "failed to create pipe $PIPE"
 	exec 3<>"$PIPE" || fatal "failed to open pipe $PIPE"
 	echo "created FIFO pipe: $PIPE"
-
 	echo 'use j/k or your arrow keys to move up and down'
 
 	# cleanup when program exits
