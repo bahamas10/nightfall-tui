@@ -15,7 +15,7 @@ Usage
 
 You can run the script over the internet with:
 
-    bash <(curl nightfall.ysap.sh)
+    curl nightfall.ysap.sh | bash
 
 Or, pull this source code and running it manually
 

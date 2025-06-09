@@ -22,7 +22,7 @@
 #
 # The pipe is opened for both reading and writing before any tasks are spawned
 # so everything will have access to it.  This allows the "Read Keyboard Events"
-# task to block indefinitely until data is read from stdin (the keyboard) and
+# task to block indefinitely until data is read from /dev/tty (the keyboard) and
 # also the "Play a Single Song" task to send up information about the underlying
 # `ffplay` command, like it's PID when it starts, and its exit code when it
 # finishes.
@@ -35,6 +35,10 @@
 # start playing it immediately (killing the previous `ffplay` instance if there
 # is one).  If the song finishes the next song will be played automatically
 # until the last song of the album is played and finishes.
+#
+# Extra file descriptors used:
+#   3. read/write - the named pipe for task communication
+#   4. read - /dev/tty for reading keyboard input
 #
 # Author: Dave Eddy <dave@daveeddy.com>
 # Date: May 13, 2024
@@ -340,11 +344,20 @@ read-keyboard-events-task() {
 }
 
 main() {
+	# ensure we can play music
 	if ! command -v ffplay &>/dev/null; then
 		echo 'ffplay (by ffmpeg) required for playback'
 		echo 'install "ffmpeg" with your package manager and try again'
 		fatal 'ffplay not found'
 	fi
+
+	# ensure we are called interactively
+	if [[ ! -t 1 ]]; then
+		fatal 'stdout must be a terminal'
+	fi
+
+	# open the terminal for keyboard input
+	exec 4</dev/tty || fatal 'no terminal detected'
 
 	# figure out window size
 	shopt -s checkwinsize
@@ -413,7 +426,7 @@ main() {
 	draw-ui
 
 	# start reading keyboard events in the background
-	read-keyboard-events-task <&0 &
+	read-keyboard-events-task <&4 &
 
 	# wait for events (from the keyboard or the player)
 	local data
