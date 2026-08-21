@@ -48,9 +48,12 @@
 # with millisecond times (also failing silently).  Either it'll work, or we'll
 # just fail - so worst case the user gets no animations.
 #
-# Author: Dave Eddy <dave@daveeddy.com>
+# Author: Dave Eddy <ysap@daveeddy.com>
 # Date: May 13, 2024
 # License: MIT
+#
+# Contributors
+# - Dave Eddy <ysap@daveeddy.com>
 
 TAGLINE='Nightfall (2024) by Dave Eddy'
 WEBSITE='https://nightfall.ysap.sh'
