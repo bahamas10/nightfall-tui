@@ -328,8 +328,8 @@ play() {
 # background task to play a song and transmit up its data
 play-song-task() {
 	local url=$1
-
-	ffplay -hide_banner -loglevel panic -autoexit -nodisp "$url" &
+	# added nostats option to circumvent output behavior
+	ffplay -hide_banner -loglevel panic -autoexit -nodisp -nostats "$url" &
 
 	local pid=$!
 	echo 'song-play' "$pid" >&3
